@@ -9,7 +9,7 @@ FEBS-Shiro是一款简单高效的后台权限管理系统，使用Spring Boot�
 
 ### 演示地址
 
-[http://shiro.febs.我爱你:8080](http://shiro.febs.我爱你:8080)  or  [http://febs.mrbird.cc:8080/login](http://febs.mrbird.cc:8080/login)
+[http://shiro.febs.我爱你:8080](http://shiro.febs.我爱你:8080)  or  [http://49.234.20.223:8080/login](http://49.234.20.223:8080/login)
 
 演示环境账号密码：
 
