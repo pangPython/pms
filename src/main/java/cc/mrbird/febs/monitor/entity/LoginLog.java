@@ -50,7 +50,7 @@ public class LoginLog implements Serializable {
      * 登录地点
      */
     @TableField("LOCATION")
-    @ExcelField(value = "登录地点", writeConverter = TimeConverter.class)
+    @ExcelField(value = "登录地点")
     private String location;
     /**
      * 登录 IP
