@@ -9,6 +9,7 @@ import com.wf.captcha.base.Captcha;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -120,9 +121,9 @@ public class CaptchaUtil {
 
     public static void setHeader(HttpServletResponse response, int cType) {
         if (cType == GIF_TYPE) {
-            response.setContentType("image/gif");
+            response.setContentType(MediaType.IMAGE_GIF_VALUE);
         } else {
-            response.setContentType("image/png");
+            response.setContentType(MediaType.IMAGE_PNG_VALUE);
         }
         response.setHeader(HttpHeaders.PRAGMA, "No-cache");
         response.setHeader(HttpHeaders.CACHE_CONTROL, "No-cache");
