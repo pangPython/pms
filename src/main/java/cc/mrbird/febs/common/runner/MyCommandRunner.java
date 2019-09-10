@@ -23,11 +23,16 @@ public class MyCommandRunner implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        //获取本地ip
-        InetAddress address = InetAddress.getLocalHost();
-        String url = String.format("http://%s:%s", address.getHostAddress(), port);
-        log.info("当前项目启动地址为 -> {}", url);
-        //使用默认浏览器打开系统首页
-        Runtime.getRuntime().exec("cmd  /c  start " + url);
+        String osName = System.getProperty("os.name").toLowerCase();
+        log.info("当前操作系统为 -> {}", osName);
+        if (osName.indexOf("windows") != -1) {//默认为windows时才自动打开页面
+            //获取本地ip
+            InetAddress address = InetAddress.getLocalHost();
+            String url = String.format("http://%s:%s", address.getHostAddress(), port);
+            log.info("当前项目启动地址为 -> {}", url);
+            //使用默认浏览器打开系统首页
+            Runtime.getRuntime().exec("cmd  /c  start " + url);
+        }
+    
     }
 }
