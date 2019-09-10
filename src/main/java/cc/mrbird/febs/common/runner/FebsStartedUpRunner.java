@@ -12,9 +12,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /**
  * @author MrBird
+ * @author FiseTch
  */
 @Slf4j
 @Component
@@ -31,6 +33,8 @@ public class FebsStartedUpRunner implements ApplicationRunner {
     private String port;
     @Value("${server.servlet.context-path:}")
     private String contextPath;
+    @Value("${spring.profiles.active}")
+    private String active;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -60,6 +64,17 @@ public class FebsStartedUpRunner implements ApplicationRunner {
             log.info("\\_\\_, \\_\\_/ |_|  | |_|   |_|__ |_|__  |_|  |_|__ ");
             log.info("                                                      ");
             log.info("FEBS 权限系统启动完毕，地址：{}", url);
+
+            boolean auto = febsProperties.isAutoOpenBrowser();
+            String[] autoEnv = febsProperties.getAutoOpenBrowserEnv();
+            int i = Arrays.binarySearch(autoEnv, active);
+            if (auto && i > 0) {
+                String osName = System.getProperty("os.name").toLowerCase();
+                if (osName.contains("windows")) {// 默认为windows时才自动打开页面
+                    //使用默认浏览器打开系统登录页
+                    Runtime.getRuntime().exec("cmd  /c  start " + url);
+                }
+            }
         }
     }
 }
