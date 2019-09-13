@@ -159,7 +159,7 @@ FEBS-Vue | FEBS-Shiro前后端分离版本，前端架构采用Vue全家桶。 |
 ### 特别赞助
 
 <a href="https://www.jetbrains.com/?from=FEBS Shiro">
-    <img src="screenshot/jetbrains.png" width="55px"></a>
+    <img src="screenshot/jetbrains.png" width="100px"></a>
 
 ### 支持作者
 如果该系统对您有帮助的话，请作者喝杯肥宅水吧🍺~
