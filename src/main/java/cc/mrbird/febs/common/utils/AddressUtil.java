@@ -1,6 +1,7 @@
 package cc.mrbird.febs.common.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -38,11 +39,13 @@ public class AddressUtil {
                 log.error("Error: Invalid ip address");
             }
             DataBlock dataBlock = (DataBlock) method.invoke(searcher, ip);
+            if (dataBlock == null)
+                return StringUtils.EMPTY;
             return dataBlock.getRegion();
         } catch (Exception e) {
             log.error("获取地址信息异常", e);
-        }finally {
-            if (searcher !=null) {
+        } finally {
+            if (searcher != null) {
                 try {
                     searcher.close();
                 } catch (IOException e) {
@@ -50,7 +53,7 @@ public class AddressUtil {
                 }
             }
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
 }
