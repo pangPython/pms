@@ -1,7 +1,6 @@
 package cc.mrbird.febs.generator.controller;
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
-import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.exception.FebsException;
@@ -35,7 +34,6 @@ public class GeneratorConfigController extends BaseController {
         return new FebsResponse().success().data(generatorConfigService.findGeneratorConfig());
     }
 
-    @Log("修改GeneratorConfig")
     @PostMapping("update")
     @RequiresPermissions("generator:configure:update")
     @ControllerEndpoint(operation = "修改GeneratorConfig", exceptionMessage = "修改GeneratorConfig失败")

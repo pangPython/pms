@@ -2,7 +2,6 @@ package cc.mrbird.febs.system.controller;
 
 
 import cc.mrbird.febs.common.annotation.ControllerEndpoint;
-import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.MenuTree;
@@ -49,7 +48,6 @@ public class MenuController extends BaseController {
         return new FebsResponse().success().data(menus.getChilds());
     }
 
-    @Log("新增菜单/按钮")
     @PostMapping
     @RequiresPermissions("menu:add")
     @ControllerEndpoint(operation = "新增菜单/按钮", exceptionMessage = "新增菜单/按钮失败")
@@ -58,7 +56,6 @@ public class MenuController extends BaseController {
         return new FebsResponse().success();
     }
 
-    @Log("删除菜单/按钮")
     @GetMapping("delete/{menuIds}")
     @RequiresPermissions("menu:delete")
     @ControllerEndpoint(operation = "删除菜单/按钮", exceptionMessage = "删除菜单/按钮失败")
