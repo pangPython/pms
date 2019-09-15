@@ -1,5 +1,6 @@
 package cc.mrbird.febs.generator.controller;
 
+import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
@@ -37,16 +38,11 @@ public class GeneratorConfigController extends BaseController {
     @Log("修改GeneratorConfig")
     @PostMapping("update")
     @RequiresPermissions("generator:configure:update")
-    public FebsResponse updateGeneratorConfig(@Valid GeneratorConfig generatorConfig) throws FebsException {
-        try {
-            if (StringUtils.isBlank(generatorConfig.getId()))
-                throw new FebsException("配置id不能为空");
-            this.generatorConfigService.updateGeneratorConfig(generatorConfig);
-            return new FebsResponse().success();
-        } catch (Exception e) {
-            String message = "修改GeneratorConfig失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
+    @ControllerEndpoint(operation = "修改GeneratorConfig", exceptionMessage = "修改GeneratorConfig失败")
+    public FebsResponse updateGeneratorConfig(@Valid GeneratorConfig generatorConfig) {
+        if (StringUtils.isBlank(generatorConfig.getId()))
+            throw new FebsException("配置id不能为空");
+        this.generatorConfigService.updateGeneratorConfig(generatorConfig);
+        return new FebsResponse().success();
     }
 }
