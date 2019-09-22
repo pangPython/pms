@@ -15,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 public class FebsProperties {
 
     private ShiroProperties shiro = new ShiroProperties();
-    private boolean openAopLog = true;
+    private boolean autoOpenBrowser = true;
+    private String[] autoOpenBrowserEnv = {};
     private SwaggerProperties swagger = new SwaggerProperties();
 }
