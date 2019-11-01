@@ -77,7 +77,7 @@
                         var left = index == 0 ? 50 : 50 + index * 20;
                         html += '
                         <dd><a style="padding-left:' + left + 'px" target="'+(child.target||'')+'"
-                               lay-href="'+ (child.href||'') +'">' + child.title + '</a>';
+                               lay-href="'+ (child.href||'') +'"><i class="layui-icon '+child.icon+'"></i>' + child.title + '</a>';
                             if(child.childs) html += __createSlidebar(child.childs,index+1);
                             html += '</dd>';
                         });
