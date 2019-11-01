@@ -96,6 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Transactional
     public void updateUser(User user) {
+        String username = user.getUsername();
         // 更新用户
         user.setPassword(null);
         user.setUsername(null);
@@ -107,7 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         setUserRoles(user, roles);
 
         User currentUser = FebsUtil.getCurrentUser();
-        if (StringUtils.equalsIgnoreCase(currentUser.getUsername(), user.getUsername())) {
+        if (StringUtils.equalsIgnoreCase(currentUser.getUsername(), username)) {
             shiroRealm.clearCache();
         }
     }
