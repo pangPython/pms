@@ -140,7 +140,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         UserRole ur = new UserRole();
         ur.setUserId(user.getUserId());
-        ur.setRoleId(2L); // 注册用户角色 ID
+        ur.setRoleId(FebsConstant.REGISTER_ROLE_ID);
         this.userRoleService.save(ur);
     }
 
