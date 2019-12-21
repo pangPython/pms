@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -22,15 +23,12 @@ import java.util.Date;
 @Excel("菜单信息表")
 public class Menu implements Serializable {
 
-    private static final long serialVersionUID = 8571011372410167901L;
-
     // 菜单
     public static final String TYPE_MENU = "0";
     // 按钮
     public static final String TYPE_BUTTON = "1";
-
     public static final Long TOP_NODE = 0L;
-
+    private static final long serialVersionUID = 8571011372410167901L;
     /**
      * 菜单/按钮ID
      */
@@ -95,6 +93,7 @@ public class Menu implements Serializable {
      */
     @TableField("CREATE_TIME")
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -102,6 +101,7 @@ public class Menu implements Serializable {
      */
     @TableField("MODIFY_TIME")
     @ExcelField(value = "修改时间", writeConverter = TimeConverter.class)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
 
 

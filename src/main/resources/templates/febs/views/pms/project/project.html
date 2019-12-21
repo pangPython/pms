@@ -1,0 +1,266 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-project" lay-title="项目管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="user-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">项目名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="projectName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="projectTable" lay-data="{id: 'projectTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="project-option">
+    <span shiro:lacksPermission="project:view,project:update,project:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="project:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="upload" shiro:hasPermission="project:upload"><i class="layui-icon febs-edit-area febs-br-gray">&#xe828;</i></a>
+    <a lay-event="patent_add" shiro:hasPermission="project:patent_add"><i
+            class="layui-icon febs-edit-area febs-br-gray">&#xe7fe;</i></a>
+    <a lay-event="task_add" shiro:hasPermission="project:task_add"><i class="layui-icon febs-edit-area febs-br-gray">&#xe7e3;</i></a>
+    <a lay-event="edit" shiro:hasPermission="project:update"><i class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="project:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script type="text/html" id="project-type">
+    {{#
+    var status = {
+    1: {name: 'IT项目'},
+    2: {name: '设备开发'},
+    3: {name: '产品开发'}
+    }[d.type];
+    }}
+    <span>{{ status.name }}</span>
+</script>
+<script type="text/html" id="project-progressPhase">
+    {{#
+    var progressPhase = {
+    2: {name: '提前',color:'cyan'},
+    1: {name: '正常',color:'green'},
+    0: {name: '滞后',color:'gold'}
+    }[d.progressPhase];
+    }}
+    <span class="layui-badge febs-tag-{{progressPhase.color}}">{{ progressPhase.name }}</span>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect', 'util', 'layer'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            util = layui.util,
+            layer = layui.layer,
+            $view = $('#febs-project'),
+            $searchForm = $view.find('form'),
+            $query = $view.find('#query'),
+            tableIns;
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('projectTable');
+                if (name === 'add') {
+                    febs.modal.open('创建项目', 'pms/projectAddView', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        yes: function (index, layero) {
+                            $('#project-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#project-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的项目');
+                    } else {
+                        febs.modal.confirm('删除项目', '确定删除该项目？', function () {
+                            var projectIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                projectIds.push(item.peojectId)
+                            });
+                            deleteProjects(projectIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'project/excel', params, '用户信息表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '创建项目',
+                perms: 'project:add'
+            }, {
+                name: 'add-plan',
+                title: '创建计划',
+                perms: 'plan:add'
+            }, {
+                name: 'add-demand',
+                title: '创建需求',
+                perms: 'demand:add'
+            }, {
+                name: 'add-task',
+                title: '创建任务',
+                perms: 'task:add'
+            }, {
+                name: 'delete',
+                title: '删除项目',
+                perms: 'project:delete'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'project:export'
+            }]
+        });
+
+        table.on('tool(projectTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('项目信息', '/project/detail/' + data.projectId, {
+                    area: $(window).width() <= 750 ? '95%' : '60%'
+                });
+            }
+            if (layEvent === 'upload') {
+                febs.modal.view('上传文件', '/project/upload/' + data.projectId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            //添加专利
+            if (layEvent === 'patent_add') {
+                febs.modal.view('添加专利', '/project/patent/add/' + data.projectId, {
+                    btn: ['提交', '重置'],
+                    area: $(window).width() <= 750 ? '95%' : '50%',
+                    yes: function (index, layero) {
+                        $('#project-patent-add').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        $('#project-patent-add').find('#reset').trigger('click');
+                        return false;
+                    }
+                });
+            }
+            // 添加任务
+            if (layEvent === 'task_add') {
+                febs.modal.view('创建任务', '/project/task/add/' + data.projectId, {
+                    btn: ['提交', '重置'],
+                    area: $(window).width() <= 750 ? '95%' : '50%',
+                    yes: function (index, layero) {
+                        $('#project-task-add').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        $('#project-task-add').find('#reset').trigger('click');
+                        return false;
+                    }
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除项目', '确定删除该项目？', function () {
+                    deleteProjects(data.projectId);
+                });
+            }
+            if (layEvent === 'edit') {
+                // 项目负责人才可以修改项目信息
+                var uId = currentUser.userId;
+                if (uId !== data.headId) {
+                    layer.msg('只有项目负责人可以更改项目信息！', {icon: 6});
+                    return;
+                }
+                febs.modal.open('修改项目', '/project/update/' + data.projectId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#project-update-form').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'projectTable',
+                url: ctx + 'project/list',
+                loading: true,
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'projectName', title: '项目名称', minWidth: 180},
+                    {field: 'alias', title: '项目编号', minWidth: 80},
+                    {field: 'typeName', title: '开发类型', templet: '#project-type', minWidth: 80},
+                    {field: 'progressPhase', title: '进度', templet: '#project-progressPhase', minWidth: 80},
+                    {field: 'progress', title: '进度百分比'},
+                    {field: 'stageName', title: '阶段'},
+                    {field: 'plannedWorkHour', title: '计划工期(天)'},
+                    {
+                        field: 'plannedEndTime', title: '计划完成时间', templet: function (d) {
+                            return util.toDateString(d.plannedEndTime, 'yyyy-MM-dd');
+                        }
+                    },
+                    {field: 'headName', title: '负责人'},
+                    {title: '操作', toolbar: '#project-option', minWidth: 200}
+                ]]
+            });
+        }
+
+        function deleteProjects(projectIds) {
+            febs.get(ctx + 'project/delete/' + projectIds, null, function () {
+                febs.alert.success('删除项目成功');
+                $query.click();
+            });
+        }
+
+
+        function getQueryParams() {
+            return {
+                projectName: $searchForm.find('input[name="projectName"]').val().trim()
+            };
+        }
+
+    })
+</script>

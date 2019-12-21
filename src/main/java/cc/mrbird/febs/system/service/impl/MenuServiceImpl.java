@@ -73,7 +73,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     @Transactional
     public void createMenu(Menu menu) {
-        menu.setCreateTime(new Date());
+//        menu.setCreateTime(new Date());
         this.setMenu(menu);
         this.baseMapper.insert(menu);
     }

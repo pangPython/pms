@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.pms.mapper.ProjectMapper">
+    <resultMap id="project" type="cc.mrbird.febs.pms.entity.Project">
+        <id column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="project_name" jdbcType="NVARCHAR" property="projectName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="status" jdbcType="SMALLINT" property="status"/>
+        <result column="head_id" jdbcType="BIGINT" property="headId"/>
+        <result column="type" jdbcType="SMALLINT" property="type"/>
+        <result column="alias" jdbcType="NVARCHAR" property="alias"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="version" jdbcType="NVARCHAR" property="version"/>
+        <result column="progress" jdbcType="SMALLINT" property="progress"/>
+        <result column="project_approval_time" jdbcType="TIMESTAMP" property="projectApprovalTime"/>
+        <result column="begining_time" jdbcType="TIMESTAMP" property="beginingTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="planned_end_time" jdbcType="TIMESTAMP" property="plannedEndTime"/>
+        <result column="actual_end_time" jdbcType="TIMESTAMP" property="actualEndTime"/>
+        <result column="planned_work_hour" jdbcType="DECIMAL" property="plannedWorkHour"/>
+        <result column="actual_work_hour" jdbcType="DECIMAL" property="actualWorkHour"/>
+        <result column="kpi" jdbcType="DECIMAL" property="kpi"/>
+        <result column="quality_score" jdbcType="DECIMAL" property="qualityScore"/>
+        <result column="degree_of_difficulty" jdbcType="DECIMAL" property="degreeOfDifficulty"/>
+        <result column="stage" jdbcType="SMALLINT" property="stage"/>
+        <result column="progress_phase" jdbcType="TINYINT" property="progressPhase"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="planned_start_time" jdbcType="TIMESTAMP" property="plannedStartTime"/>
+        <result column="remark" jdbcType="LONGNVARCHAR" property="remark"/>
+        <result column="project_approval_text" jdbcType="LONGVARCHAR" property="projectApprovalText"/>
+        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+        <result column="close_reason" jdbcType="LONGVARCHAR" property="closeReason"/>
+    </resultMap>
+    <sql id="findProjectDetailSql">
+        SELECT
+        p.*
+        ,u.name headName
+        ,(select name from dict_project_stage s where p.stage = s.id) stageName
+        ,(select name from dict_project_type t where p.type = t.id) typeName
+        ,(select name from t_user u where p.create_user = u.USER_ID) createUsername
+        FROM
+        project p left join t_user u on p.head_id = u.USER_ID
+        <where>
+            <if test="project.projectName != null and project.projectName != ''">
+                p.project_name like '%'+#{project.projectName}+'%'
+            </if>
+        </where>
+    </sql>
+    <select id="listPage" parameterType="cc.mrbird.febs.pms.entity.Project"
+            resultMap="project">
+        <include refid="findProjectDetailSql"/>
+    </select>
+
+    <select id="findProjectDetail" parameterType="java.lang.Long" resultMap="project">
+        SELECT
+        p.*
+        ,u.name headName
+        ,(select name from dict_project_stage s where p.stage = s.id) stageName
+        ,(select name from dict_project_type t where p.type = t.id) typeName
+        ,(select name from t_user u where p.create_user = u.USER_ID) createUsername
+        FROM
+        project p left join t_user u on p.head_id = u.USER_ID
+        <where>
+            <if test="projectId != null">
+                p.project_id = #{projectId}
+            </if>
+        </where>
+    </select>
+</mapper>
