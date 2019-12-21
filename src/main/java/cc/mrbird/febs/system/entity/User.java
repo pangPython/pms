@@ -25,8 +25,6 @@ import java.util.Date;
 @Excel("用户信息表")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = -4352868070794165001L;
-
     // 用户状态：有效
     public static final String STATUS_VALID = "1";
     // 用户状态：锁定
@@ -49,8 +47,7 @@ public class User implements Serializable {
     public static final String TAB_OPEN = "1";
     // TAB关闭
     public static final String TAB_CLOSE = "0";
-
-
+    private static final long serialVersionUID = -4352868070794165001L;
     /**
      * 用户 ID
      */
@@ -64,7 +61,12 @@ public class User implements Serializable {
     @Size(min = 4, max = 10, message = "{range}")
     @ExcelField(value = "用户名")
     private String username;
-
+    /**
+     * 姓名
+     */
+    @TableField("name")
+    @ExcelField(value = "姓名")
+    private String name;
     /**
      * 密码
      */

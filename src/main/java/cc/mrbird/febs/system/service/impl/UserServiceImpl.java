@@ -12,6 +12,7 @@ import cc.mrbird.febs.system.mapper.UserMapper;
 import cc.mrbird.febs.system.service.IUserRoleService;
 import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -43,6 +44,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User findByName(String username) {
         return this.baseMapper.findByName(username);
+    }
+
+    @Override
+    public List<User> findUsers(User user) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(user.getName())) {
+            queryWrapper.lambda().like(User::getName, user.getName());
+        }
+        return baseMapper.selectList(queryWrapper);
     }
 
     @Override

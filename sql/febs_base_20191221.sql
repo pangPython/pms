@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 21/12/2019 15:19:50
+ Date: 21/12/2019 16:51:28
 */
 
 SET NAMES utf8mb4;
@@ -574,7 +574,7 @@ CREATE TABLE `t_menu`  (
   `CREATE_TIME` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `MODIFY_TIME` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
   PRIMARY KEY (`MENU_ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 178 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 179 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_menu
@@ -656,6 +656,7 @@ INSERT INTO `t_menu` VALUES (174, 109, '导出Excel', NULL, 'job:log:export', NU
 INSERT INTO `t_menu` VALUES (175, 2, 'Swagger文档', '/monitor/swagger', 'swagger:view', '', '0', 8, '2019-08-18 17:25:36', '2019-08-18 17:25:59');
 INSERT INTO `t_menu` VALUES (176, 0, '项目管理', '', 'project:list', 'layui-icon-snippets', '0', NULL, '2019-12-21 14:12:50', '2019-12-21 14:18:58');
 INSERT INTO `t_menu` VALUES (177, 176, '项目列表', '/pms/project/list', 'project:list', 'layui-icon-sever', '0', NULL, '2019-12-21 14:18:44', NULL);
+INSERT INTO `t_menu` VALUES (178, 177, '创建项目', NULL, 'project:add', NULL, '1', NULL, '2019-12-21 15:48:27', NULL);
 
 -- ----------------------------
 -- Table structure for t_role
@@ -673,7 +674,7 @@ CREATE TABLE `t_role`  (
 -- ----------------------------
 -- Records of t_role
 -- ----------------------------
-INSERT INTO `t_role` VALUES (1, '系统管理员', '系统管理员，拥有所有操作权限 ^_^', '2019-06-14 16:23:11', '2019-12-21 14:19:10');
+INSERT INTO `t_role` VALUES (1, '系统管理员', '系统管理员，拥有所有操作权限 ^_^', '2019-06-14 16:23:11', '2019-12-21 15:48:41');
 INSERT INTO `t_role` VALUES (2, '注册账户', '注册账户，拥有查看，新增权限（新增用户除外）和导出Excel权限', '2019-06-14 16:00:15', '2019-08-18 17:36:02');
 INSERT INTO `t_role` VALUES (77, 'Redis监控员', '负责Redis模块', '2019-06-14 20:49:22', NULL);
 INSERT INTO `t_role` VALUES (78, '系统监控员', '负责整个系统监控模块', '2019-06-14 20:50:07', NULL);
@@ -802,7 +803,7 @@ INSERT INTO `t_role_menu` VALUES (1, 12);
 INSERT INTO `t_role_menu` VALUES (1, 11);
 INSERT INTO `t_role_menu` VALUES (1, 3);
 INSERT INTO `t_role_menu` VALUES (1, 1);
-INSERT INTO `t_role_menu` VALUES (1, 177);
+INSERT INTO `t_role_menu` VALUES (1, 178);
 INSERT INTO `t_role_menu` VALUES (2, 1);
 INSERT INTO `t_role_menu` VALUES (2, 3);
 INSERT INTO `t_role_menu` VALUES (2, 161);
@@ -856,6 +857,7 @@ INSERT INTO `t_role_menu` VALUES (2, 125);
 INSERT INTO `t_role_menu` VALUES (2, 167);
 INSERT INTO `t_role_menu` VALUES (2, 168);
 INSERT INTO `t_role_menu` VALUES (2, 169);
+INSERT INTO `t_role_menu` VALUES (1, 177);
 INSERT INTO `t_role_menu` VALUES (1, 176);
 INSERT INTO `t_role_menu` VALUES (1, 169);
 
@@ -866,6 +868,7 @@ DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user`  (
   `USER_ID` bigint(20) NOT NULL COMMENT '用户ID',
   `USERNAME` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `PASSWORD` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `DEPT_ID` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
   `EMAIL` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
@@ -886,14 +889,14 @@ CREATE TABLE `t_user`  (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES (1, 'MrBird', 'cb62ad1497597283961545d608f80241', 1, 'mrbird@qq.com', '17788888888', '1', '2019-06-14 20:39:22', '2019-06-14 20:44:42', '2019-12-21 13:10:49', '0', '1', 'white', 'cnrhVkzwxjPwAaCfPbdc.png', '我是帅比作者。', 0);
-INSERT INTO `t_user` VALUES (2, 'Scott', '1d685729d113cfd03872f154939bee1c', 10, 'scott@gmail.com', '17722222222', '1', '2019-06-14 20:55:53', '2019-06-14 21:05:43', '2019-08-18 17:36:18', '0', '1', 'black', 'gaOngJwsRYRaVAuXXcmB.png', '我是scott。', 1);
-INSERT INTO `t_user` VALUES (3, 'Reina', '1461afff857c02afbfb768aa3771503d', 4, 'Reina@hotmail.com', '17711111111', '0', '2019-06-14 21:07:38', '2019-06-14 21:09:06', '2019-06-14 21:08:26', '1', '1', 'black', '5997fedcc7bd4cffbd350b40d1b5b987.jpg', '由于公款私用，已被封禁。', 2);
-INSERT INTO `t_user` VALUES (4, 'Micaela', '9f2daa2c7bed6870fcbb5b9a51d6300e', 10, 'Micaela@163.com', '17733333333', '1', '2019-06-14 21:10:13', '2019-06-14 21:11:26', '2019-09-26 15:47:19', '0', '0', 'white', '20180414165909.jpg', '我叫米克拉', 3);
-INSERT INTO `t_user` VALUES (5, 'Jana', '176679b77b3c3e352bd3b30ddc81083e', 8, 'Jana@126.com', '17744444444', '1', '2019-06-14 21:12:16', '2019-06-14 21:12:52', '2019-06-14 21:12:32', '1', '1', 'white', '20180414165821.jpg', '大家好，我叫简娜', 4);
-INSERT INTO `t_user` VALUES (6, 'Georgie', 'dffc683378cdaa015a0ee9554c532225', 3, 'Georgie@qq.com', '17766666666', '0', '2019-06-14 21:15:09', '2019-06-14 21:16:25', '2019-06-14 21:16:11', '2', '0', 'black', 'BiazfanxmamNRoxxVxka.png', '生产执行rm -rf *，账号封禁T T', 5);
-INSERT INTO `t_user` VALUES (7, 'Margot', '31379841b9f4bfde22b8b40471e9a6ce', 9, 'Margot@qq.com', '13444444444', '1', '2019-06-14 21:17:53', '2019-06-14 21:18:59', '2019-06-14 21:18:07', '1', '1', 'white', '20180414165834.jpg', '大家好我叫玛戈', 6);
-INSERT INTO `t_user` VALUES (8, 'admin', '1538ea7be58ccf70454ed60bb50e34d0', 10, '', '', '1', '2019-10-10 14:19:32', '2019-10-10 14:25:00', '2019-12-21 14:09:29', '2', '1', 'white', 'default.jpg', '', 7);
+INSERT INTO `t_user` VALUES (1, 'MrBird', '测试账号', 'cb62ad1497597283961545d608f80241', 1, 'mrbird@qq.com', '17788888888', '1', '2019-06-14 20:39:22', '2019-06-14 20:44:42', '2019-12-21 13:10:49', '0', '1', 'white', 'cnrhVkzwxjPwAaCfPbdc.png', '我是帅比作者。', 0);
+INSERT INTO `t_user` VALUES (2, 'Scott', '游客1', '1d685729d113cfd03872f154939bee1c', 10, 'scott@gmail.com', '17722222222', '1', '2019-06-14 20:55:53', '2019-06-14 21:05:43', '2019-08-18 17:36:18', '0', '1', 'black', 'gaOngJwsRYRaVAuXXcmB.png', '我是scott。', 1);
+INSERT INTO `t_user` VALUES (3, 'Reina', '游客2', '1461afff857c02afbfb768aa3771503d', 4, 'Reina@hotmail.com', '17711111111', '0', '2019-06-14 21:07:38', '2019-06-14 21:09:06', '2019-06-14 21:08:26', '1', '1', 'black', '5997fedcc7bd4cffbd350b40d1b5b987.jpg', '由于公款私用，已被封禁。', 2);
+INSERT INTO `t_user` VALUES (4, 'Micaela', '游客3', '9f2daa2c7bed6870fcbb5b9a51d6300e', 10, 'Micaela@163.com', '17733333333', '1', '2019-06-14 21:10:13', '2019-06-14 21:11:26', '2019-09-26 15:47:19', '0', '0', 'white', '20180414165909.jpg', '我叫米克拉', 3);
+INSERT INTO `t_user` VALUES (5, 'Jana', '游客4', '176679b77b3c3e352bd3b30ddc81083e', 8, 'Jana@126.com', '17744444444', '1', '2019-06-14 21:12:16', '2019-06-14 21:12:52', '2019-06-14 21:12:32', '1', '1', 'white', '20180414165821.jpg', '大家好，我叫简娜', 4);
+INSERT INTO `t_user` VALUES (6, 'Georgie', '游客5', 'dffc683378cdaa015a0ee9554c532225', 3, 'Georgie@qq.com', '17766666666', '0', '2019-06-14 21:15:09', '2019-06-14 21:16:25', '2019-06-14 21:16:11', '2', '0', 'black', 'BiazfanxmamNRoxxVxka.png', '生产执行rm -rf *，账号封禁T T', 5);
+INSERT INTO `t_user` VALUES (7, 'Margot', '游客6', '31379841b9f4bfde22b8b40471e9a6ce', 9, 'Margot@qq.com', '13444444444', '1', '2019-06-14 21:17:53', '2019-06-14 21:18:59', '2019-06-14 21:18:07', '1', '1', 'white', '20180414165834.jpg', '大家好我叫玛戈', 6);
+INSERT INTO `t_user` VALUES (8, 'admin', '管理员', '1538ea7be58ccf70454ed60bb50e34d0', 10, '', '', '1', '2019-10-10 14:19:32', '2019-10-10 14:25:00', '2019-12-21 14:09:29', '2', '1', 'white', 'default.jpg', '', 7);
 
 -- ----------------------------
 -- Table structure for t_user_role

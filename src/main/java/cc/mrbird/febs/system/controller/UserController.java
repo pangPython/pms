@@ -35,6 +35,11 @@ public class UserController extends BaseController {
     @Autowired
     private IUserService userService;
 
+    @GetMapping
+    public FebsResponse getAllUsers(User user) {
+        return new FebsResponse().success().data(userService.findUsers(user));
+    }
+
     @GetMapping("{username}")
     public User getUser(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userService.findUserDetail(username);

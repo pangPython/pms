@@ -17,4 +17,11 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     IPage<Project> listPage(Project project, QueryRequest request);
+
+    /**
+     * 新增
+     *
+     * @param project project
+     */
+    void createProject(Project project);
 }

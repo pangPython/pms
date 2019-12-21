@@ -1,0 +1,267 @@
+<style>
+
+    #febs-user-detail #user-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-user-detail .user-info div {
+        margin: 10px 15px;
+        /*max-width: 80%;*/
+    }
+
+    #febs-user-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-user-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+    .row-style {
+        padding: 5px;
+    }
+</style>
+<div class="layui-fluid" id="febs-project-detail" lay-title="项目信息">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>
+            <h3>
+                [[${#strings.defaultString(project.projectName,'')}]]（[[${#strings.defaultString(project.alias,'')}]]）</h3>
+        </legend>
+        <div class="layui-field-box">
+            <div class="layui-container">
+                <input type="hidden" th:value="${project.projectId}" id="projectId">
+                <div class="layui-row row-style">
+                    <div class="layui-col-md10">
+                        [[${#strings.defaultString(project.createUsername,'')}]] 于
+                        [[${#dates.format(project.createTime,'yyyy年MM月dd日')}]]创建。
+                    </div>
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md10"><span class="layui-icon layui-icon-detail"></span>
+                        简介：
+                        [[${#strings.defaultString(project.description,'')}]]
+                    </div>
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span
+                            class="layui-icon layui-icon-time-circle"></span> 项目开始时间：
+                        [[${#dates.format(project.startTime,'yyyy年MM月dd日')}]]
+                    </div>
+                    <div class="layui-col-md4">
+                        <span class="layui-icon layui-icon-build"></span> 项目进展：
+                        <a th:switch="${project.progressPhase}">
+                            <span th:case="1" class="layui-badge febs-tag-green">正常</span>
+                            <span th:case="2" class="layui-badge febs-tag-cyan">提前</span>
+                            <span th:case="0" class="layui-badge febs-tag-gold">滞后</span>
+                        </a>
+                    </div>
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-gold"></span> 类型：
+                        [[${#strings.defaultString(project.typeName,'')}]]
+                    </div>
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-build"></span>
+                        开发阶段：
+                        [[${#strings.defaultString(project.stageName,'')}]]
+                    </div>
+
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-user"></span> 负责人：
+                        [[${#strings.defaultString(project.headName,'')}]]
+                    </div>
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md12">
+                        <span class="layui-icon layui-icon-team"></span> 成员：
+                        <div>
+                            <span class="layui-badge layui-bg-blue project-member-badge"
+                                  th:each="user : ${project.members}">[[${user.name}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend><h3>KPI</h3></legend>
+        <div class="layui-field-box">
+            <div class="layui-container">
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 计划开始时间：
+                        [[${#dates.format(project.plannedStartTime,'yyyy年MM月dd日')}]]
+                    </div>
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 计划完成时间：
+                        [[${#dates.format(project.plannedEndTime,'yyyy年MM月dd日')}]]
+                    </div>
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 计划总工时(天)：
+                        [[${#strings.defaultString(project.plannedWorkHour,'')}]]
+                    </div>
+
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 实际开始时间：
+                        [[${#dates.format(project.startTime,'yyyy年MM月dd日')}]]
+                    </div>
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 实际完成时间：
+                        [[${#dates.format(project.actualEndTime,'yyyy年MM月dd日')}]]
+                    </div>
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-time-circle"></span> 实际总工时(天)：
+                        [[${#strings.defaultString(project.actualEndTime,'')}]]
+                    </div>
+                </div>
+                <div class="layui-row row-style">
+                    <div class="layui-col-md4"><span class="layui-icon layui-icon-radarchart"></span> KPI：
+                        [[${#strings.defaultString(project.kpi,'')}]]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend><h3>任务列表</h3></legend>
+        <div class="layui-field-box">
+            <div class="layui-container">
+                <table class="layui-table" id="taskTable" lay-filter="taskTable">
+                </table>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend><h3>专利</h3></legend>
+        <div class="layui-field-box">
+            <div class="layui-container">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>专利编号</th>
+                        <th>专利名称</th>
+                        <th>类型</th>
+                        <th>申请时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-th-each="patent:${patentList}" th:switch="${patent.type}">
+                        <td>[[${patent.patentId}]]</td>
+                        <td>[[${patent.patentName}]]</td>
+                        <td th:case="1">发明专利</td>
+                        <td th:case="2">实用新型专利</td>
+                        <td th:case="3">外观设计专利</td>
+                        <td>[[${#dates.format(patent.applyTime,'yyyy-MM-dd')}]]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend><h3>项目附件</h3></legend>
+        <div class="layui-field-box">
+            <div class="layui-container">
+                <ul class="layui-timeline">
+
+                    <li class="layui-timeline-item" th:each="fileUpload : ${fileUploadList}">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title" th:text="${fileUpload.originalFilename}"></h3>
+                            <p th:if="${#strings.endsWith(fileUpload.originalFilename, 'pdf')}">
+                                上传时间：<a style="text-decoration:none;" th:text="${fileUpload.uploadTime}"></a>
+                                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal"
+                                        onclick="preview(this)" th:filename="${fileUpload.originalFilename}"
+                                        th:href="@{'/project/preview/pdf/'+${fileUpload.fileId}}">预览
+                                </button>
+                                <a th:href="@{'/project/download/'+${fileUpload.fileId}}"
+                                   type="button" class="layui-btn layui-btn-radius layui-btn-normal">下载</a>
+                            </p>
+                            <p th:if="${not #strings.endsWith(fileUpload.originalFilename, 'pdf')}">
+                                上传时间：<a style="text-decoration:none;" th:text="${fileUpload.uploadTime}"></a>
+                                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal"
+                                        onclick="preview(this)" th:filename="${fileUpload.originalFilename}"
+                                        th:href="@{'/project/preview/image/'+${fileUpload.fileId}}">预览
+                                </button>
+                                <a th:href="@{'/project/download/'+${fileUpload.fileId}}"
+                                   type="button" class="layui-btn layui-btn-radius layui-btn-normal">下载</a>
+                            </p>
+                            <p>
+                                上传人：<a th:text="${fileUpload.uploaderName}"></a>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['febs', 'jquery', 'table', 'layer'], function () {
+        var febs = layui.febs
+            , $ = layui.jquery
+            , projectId = $('#projectId').val()
+            , table = layui.table
+            , layer = layui.layer;
+
+        febs.table.init({
+            elem: '#taskTable'
+            , height: 312
+            , skin: 'line'
+            , url: '/task/list/' + projectId //数据接口
+            , page: true //开启分页
+            , loading: true
+            , cols: [[
+                {field: 'taskName', title: '任务名', fixed: 'left'},
+                {field: 'headName', title: '负责人'}
+            ]]
+        });
+
+        table.on('row(taskTable)', function (obj) {
+            console.log(obj.data) //得到当前行数据
+            var row = obj.data
+                , taskId = row.taskId;
+            febs.modal.view('任务信息', '/project/task/detail/' + taskId, {
+                area: $(window).width() <= 750 ? '95%' : '60%'
+            });
+        });
+
+    });
+
+    function preview(obj) {
+        var filename = obj.getAttribute("filename");
+        if (/.(pdf)$/.test(filename)) {
+            var href = obj.getAttribute("href");
+            layer.open({
+                type: 2,
+                area: ['90%', '100%'],
+                fixed: true, //不固定
+                resize: false,
+                maxmin: true,
+                shadeClose: true,
+                shade: 0.4,
+                content: href //这里content是一个普通的String
+            });
+            return;
+        }
+        if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(filename)) {
+            layer.msg('该格式暂不支持预览！', {icon: 5});
+            return;
+        }
+        var href = obj.getAttribute("href");
+        layer.open({
+            type: 1,
+            area: ['auto', 'auto'],
+            fixed: true, //不固定
+            resize: false,
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.4,
+            content: '<img src="' + href + '">' //这里content是一个普通的String
+        });
+    }
+</script>
