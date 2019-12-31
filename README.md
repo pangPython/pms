@@ -9,3 +9,6 @@ https://github.com/wuyouzhuguli/FEBS-Shiro
 
 ## 项目列表
 ![项目列表](screenshot/项目列表.png)
+
+## 项目详情
+![项目详情](screenshot/项目详情.png)

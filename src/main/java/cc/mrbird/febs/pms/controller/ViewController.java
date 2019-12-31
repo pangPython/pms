@@ -5,8 +5,10 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.pms.entity.DictProjectStage;
 import cc.mrbird.febs.pms.entity.DictProjectType;
+import cc.mrbird.febs.pms.entity.Project;
 import cc.mrbird.febs.pms.service.DictProjectStageService;
 import cc.mrbird.febs.pms.service.DictProjectTypeService;
+import cc.mrbird.febs.pms.service.ProjectService;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -26,7 +29,8 @@ public class ViewController extends BaseController {
 
     @Autowired
     private IUserService userService;
-
+    @Autowired
+    private ProjectService projectService;
     @Autowired
     private DictProjectStageService projectStageService;
     @Autowired
@@ -61,5 +65,20 @@ public class ViewController extends BaseController {
         List<User> userList = userService.list();
         model.addAttribute("userList", userList);
         return FebsUtil.view("pms/project/projectAdd");
+    }
+
+    /**
+     * 显示项目详情页面
+     *
+     * @return
+     */
+    @GetMapping(FebsConstant.VIEW_PREFIX + "project/detail/{projectId}")
+    @RequiresPermissions("project:view")
+    public String projectDetail(@PathVariable("projectId") Long projectId, Model model) {
+        Project project = projectService.findProjectDetail(projectId);
+        if (project != null) {
+            model.addAttribute("project", project);
+        }
+        return FebsUtil.view("pms/project/projectDetail");
     }
 }

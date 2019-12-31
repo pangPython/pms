@@ -24,4 +24,11 @@ public interface ProjectService extends IService<Project> {
      * @param project project
      */
     void createProject(Project project);
+    /**
+     * 根据项目ID获取项目
+     *
+     * @param projectId
+     * @return
+     */
+    Project findProjectDetail(Long projectId);
 }

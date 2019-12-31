@@ -66,4 +66,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         });
         projectMemberService.saveBatch(projectMembers);
     }
+
+    @Override
+    public Project findProjectDetail(Long projectId) {
+        Project project = baseMapper.findProjectDetail(projectId);
+        return project;
+    }
 }
